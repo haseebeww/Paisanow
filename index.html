@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaisaNow - Earn Money Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-100 to-blue-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-md">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center">
+                <div class="bg-yellow-400 rounded-full p-2 mr-3">
+                    <i class="fas fa-wallet text-white text-xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-purple-800">PaisaNow</h1>
+            </div>
+            <div class="flex items-center">
+                <div class="bg-white rounded-full px-4 py-2 shadow-md flex items-center">
+                    <i class="fas fa-coins text-yellow-500 mr-2"></i>
+                    <span id="balance" class="font-bold">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- User Stats -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">Your Earnings</h2>
+                <button onclick="showWithdrawModal()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                    Withdraw
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="bg-blue-50 p-3 rounded-lg">
+                    <p class="text-sm text-gray-600">Today</p>
+                    <p id="todayEarnings" class="font-bold text-blue-600">Rs. 0</p>
+                </div>
+                <div class="bg-purple-50 p-3 rounded-lg">
+                    <p class="text-sm text-gray-600">Total</p>
+                    <p id="totalEarnings" class="font-bold text-purple-600">Rs. 0</p>
+                </div>
+                <div class="bg-green-50 p-3 rounded-lg">
+                    <p class="text-sm text-gray-600">Withdrawn</p>
+                    <p id="withdrawnAmount" class="font-bold text-green-600">Rs. 0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks Section -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Available Tasks</h2>
+            
+            <!-- Task 1: Watch Ad -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-ad text-purple-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">Watch a Video Ad</h3>
+                        <p class="text-sm text-gray-600">30 seconds video</p>
+                    </div>
+                </div>
+                <button onclick="completeTask('watch_ad', 10)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                    Earn Rs. 10
+                </button>
+            </div>
+            
+            <!-- Task 2: Survey -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-poll text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">Complete a Survey</h3>
+                        <p class="text-sm text-gray-600">5 simple questions</p>
+                    </div>
+                </div>
+                <button onclick="completeTask('survey', 25)" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                    Earn Rs. 25
+                </button>
+            </div>
+            
+            <!-- Task 3: App Install -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="bg-green-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-mobile-alt text-green-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">Install an App</h3>
+                        <p class="text-sm text-gray-600">Try for 2 minutes</p>
+                    </div>
+                </div>
+                <button onclick="completeTask('install_app', 50)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                    Earn Rs. 50
+                </button>
+            </div>
+            
+            <!-- Task 4: Referral -->
+            <div class="bg-white rounded-xl shadow-md p-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="bg-yellow-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-user-plus text-yellow-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">Refer a Friend</h3>
+                        <p class="text-sm text-gray-600">Get Rs. 50 per referral</p>
+                    </div>
+                </div>
+                <button onclick="showReferralModal()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                    Invite
+                </button>
+            </div>
+        </div>
+
+        <!-- Daily Bonus -->
+        <div class="bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl shadow-lg p-6 text-white mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-bold mb-1">Daily Bonus</h2>
+                    <p class="text-sm opacity-90">Login daily to earn extra coins!</p>
+                </div>
+                <button onclick="claimDailyBonus()" id="dailyBonusBtn" class="bg-white text-purple-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-bold pulse-animation">
+                    Claim Rs. 20
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdrawModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Withdraw Earnings</h2>
+                <button onclick="hideWithdrawModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Withdrawal Method</label>
+                <div class="flex space-x-2 mb-4">
+                    <button onclick="selectWithdrawalMethod('easypaisa')" id="easypaisaBtn" class="flex-1 border-2 border-blue-500 bg-blue-50 text-blue-700 py-2 px-4 rounded-lg font-medium">
+                        <i class="fas fa-mobile-alt mr-2"></i> EasyPaisa
+                    </button>
+                    <button onclick="selectWithdrawalMethod('jazzcash')" id="jazzcashBtn" class="flex-1 border-2 border-gray-300 hover:border-green-500 py-2 px-4 rounded-lg font-medium">
+                        <i class="fas fa-wallet mr-2"></i> JazzCash
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label for="mobileNumber" class="block text-gray-700 mb-2">Mobile Number</label>
+                <input type="text" id="mobileNumber" placeholder="03XX1234567" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+            
+            <div class="mb-4">
+                <label for="withdrawAmount" class="block text-gray-700 mb-2">Amount (Minimum Rs. 50)</label>
+                <input type="number" id="withdrawAmount" placeholder="50" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+            
+            <button onclick="processWithdrawal()" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold transition">
+                Withdraw Now
+            </button>
+        </div>
+    </div>
+
+    <!-- Referral Modal -->
+    <div id="referralModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Invite Friends & Earn</h2>
+                <button onclick="hideReferralModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mb-6 text-center">
+                <div class="bg-purple-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-gift text-purple-600 text-4xl"></i>
+                </div>
+                <p class="text-gray-700 mb-2">Invite your friends to join PaisaNow using your referral code</p>
+                <div class="bg-gray-100 p-3 rounded-lg mb-4">
+                    <p class="font-mono font-bold text-lg">PAISANOW123</p>
+                </div>
+                <p class="text-sm text-gray-600">You'll both earn Rs. 50 when they complete their first task!</p>
+            </div>
+            
+            <button onclick="copyReferralCode()" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-bold transition">
+                Copy Referral Code
+            </button>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4 text-center">
+            <div class="mb-4">
+                <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                    <i class="fas fa-check text-green-600 text-2xl"></i>
+                </div>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800 mb-2" id="successTitle">Success!</h2>
+            <p class="text-gray-600 mb-6" id="successMessage">Your withdrawal request has been submitted.</p>
+            <button onclick="hideSuccessModal()" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold transition">
+                Continue Earning
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
